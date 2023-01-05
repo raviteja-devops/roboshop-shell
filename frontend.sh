@@ -1,3 +1,5 @@
+conf_file=$(pwd)
+
 # Install Nginx
 yum install nginx -y
 
@@ -15,7 +17,9 @@ curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend.z
 cd /usr/share/nginx/html
 unzip /tmp/frontend.zip
 
-cp files/nginx_roboshop.conf /etc/nginx/default.d/roboshop.conf
+# searching for files folder in /usr/share/nginx/html path, so we specify files folder location as variable
+
+cp ${conf_file}/files/nginx_roboshop.conf /etc/nginx/default.d/roboshop.conf
 
 # Restart Nginx Service to load the changes of the configuration
 systemctl restart nginx
