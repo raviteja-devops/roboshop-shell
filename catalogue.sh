@@ -1,5 +1,7 @@
 repo_file=$(pwd)
 
+set -e
+
 # Setup NodeJS repos. Vendor is providing a script to setup the repos
 curl -sL https://rpm.nodesource.com/setup_lts.x | bash
 
