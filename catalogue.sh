@@ -11,7 +11,7 @@ yum install nodejs -y
 # Add application User
 # User roboshop is a function / daemon user to run the application.
 # Apart from that we dont use this user to login to server.
-useradd roboshop
+#useradd roboshop
 
 # Lets setup an app directory
 mkdir /app
