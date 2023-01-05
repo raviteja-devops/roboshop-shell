@@ -23,6 +23,9 @@ unzip /tmp/catalogue.zip
 cd /app
 npm install
 
+# Setup the MongoDB repo file
+cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo
+
 # Load the service
 systemctl daemon-reload
 
@@ -30,10 +33,7 @@ systemctl daemon-reload
 systemctl enable catalogue
 systemctl start catalogue
 
-# Setup the MongoDB repo file
-cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo
-
 # Install MongoDB
-yum install mongodb-org-shell -y
+
 
 # Load Schema
