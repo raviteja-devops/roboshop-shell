@@ -16,6 +16,8 @@ yum install nodejs -y
 # Lets setup an app directory
 mkdir -p /app
 
+rm -rf /app/*
+
 # Download the application code to created app directory
 curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip
 cd /app
