@@ -43,4 +43,4 @@ cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo
 yum install mongodb-org-shell -y
 
 # Load Schema
-mongo --host localhost </app/schema/catalogue.js
+mongo --host mongodb-dev.raviteja.online </app/schema/catalogue.js
