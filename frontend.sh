@@ -8,6 +8,8 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
 
 # Remove the default content that web server is serving
@@ -17,6 +19,8 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
 
 # Download the frontend content
@@ -26,6 +30,8 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
 
 # Extract the frontend content
@@ -36,6 +42,8 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
 
 # searching for files folder in /usr/share/nginx/html path, so we specify files folder location as variable
@@ -46,6 +54,8 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
 
 # Enable Nginx service
@@ -55,6 +65,8 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
 
 # Restart Nginx Service to load the changes of the configuration
@@ -64,4 +76,6 @@ if [ $? -eq 0 ]; then
   echo SUCCESS
 else
   echo FAILURE
+  echo "Refer Log File For More Information, LOG - ${LOG}"
+exit
 fi
