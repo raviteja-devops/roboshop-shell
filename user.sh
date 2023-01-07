@@ -40,19 +40,32 @@ npm install &>>${LOG}
 status_check
 
 print_head "Setup Catalogue Service"
-cp ${script_location}/files/user.service /etc/systemd/system/catalogue.service &>>${LOG}
+cp ${script_location}/files/user.service /etc/systemd/system/user.service &>>${LOG}
 status_check
 
+print_head "Load The Service"
 systemctl daemon-reload &>>${LOG}
 status_check
 
+print_head "Enable The Service"
 systemctl enable user &>>${LOG}
 status_check
+
+print_head "Start The Service"
 systemctl start user &>>${LOG}
 status_check
 
+# We need to load the schema. To load schema we need to install mongodb client.
+# To have it installed we can setup MongoDB repo and install mongodb-client
+
+print_head "Setup MongoDB Repo"
+cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+status_check
+
+print_head "Install MongoDB Client"
 yum install mongodb-org-shell -y &>>${LOG}
 status_check
 
+print_head "Load Schema"
 mongo --host mongodb-dev.raviteja.online </app/schema/user.js &>>${LOG}
 status_check

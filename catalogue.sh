@@ -54,6 +54,8 @@ status_check
 
 # We need to load the schema. To load schema we need to install mongodb client
 # To have it installed we can setup MongoDB repo and install mongodb-client
+
+print_head "Setup MongoDB Repo"
 cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
 status_check
 
