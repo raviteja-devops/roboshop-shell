@@ -1,20 +1,18 @@
-# Setup the MongoDB repo file
-repo_file=$(pwd)
-cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo
+source common.sh
 
-# Install MongoDB
-echo -e "\e[35m Install MongoDB\e[0m"
-yum install mongodb-org -y
+print_head "Setup the MongoDB repo file"
+cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+status_check
 
-# Start & Enable MongoDB Service
-echo -e "\e[35m Enable and Start MongoDB\e[0m"
-systemctl enable mongod
-systemctl start mongod
+print_head "Install MongoDB"
+yum install mongodb-org -y &>>${LOG}
+status_check
 
-# Update listen address from 127.0.0.1 to 0.0.0.0 in /etc/mongod.conf
-echo -e "\e[35m Change IP in Conf File\e[0m"
-sed -i -e 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf
+print_head "Change IP in Conf File"
+sed -i -e 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>>${LOG}
+status_check
 
-# Restart the service to make the changes effected
-echo -e "\e[35m Restart MongoDB\e[0m"
-systemctl restart mongod
+print_head "Enable and Start MongoDB"
+systemctl enable mongod &>>${LOG}
+systemctl restart mongod &>>${LOG}
+status_check

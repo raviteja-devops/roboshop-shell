@@ -1,57 +1,66 @@
-repo_file=$(pwd)
+source common.sh
 
-# Setup NodeJS repos. Vendor is providing a script to setup the repos
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash
+print_head "Setup NodeJS repos"
+curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
+status_check
 
-# Install NodeJS
-echo -e "\e[35m Install NodeJS\e[0m"
-yum install nodejs -y
+print_head "Install NodeJS"
+yum install nodejs -y &>>${LOG}
+status_check
 
-# Add application User
-# User roboshop is a function / daemon user to run the application.
-# Apart from that we dont use this user to login to server.
-echo -e "\e[35m Add User\e[0m"
-useradd roboshop
+print_head "Add User"
+id roboshop &>>${LOG}
+if [ $? -ne 0]; then
+  useradd roboshop &>>${LOG}
+fi
+status_check
 
-# Lets setup an app directory
-echo -e "\e[35m Create Directory\e[0m"
-mkdir -p /app
+print_head "Create Directory"
+mkdir -p /app &>>${LOG}
+status_check
 
-echo -e "\e[35m Removing Existing Files\e[0m"
-rm -rf /app/*
+print_head "Removing Existing Files"
+rm -rf /app/* &>>${LOG}
+status_check
 
-# Download the application code to created app directory
-echo -e "\e[35m Download The Application Code and Unzip\e[0m"
-curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip
-cd /app
-unzip /tmp/catalogue.zip
+print_head "Download The Application Code"
+curl -L -o /tmp/catalogue.zip https://roboshop-artifacts.s3.amazonaws.com/catalogue.zip &>>${LOG}
 
-# Lets download the dependencies
-echo -e "\e[35m Install Dependencies\e[0m"
-cd /app
-npm install
+print_head "Unzip the Downloaded Content"
+cd /app &>>${LOG}
+unzip /tmp/catalogue.zip &>>${LOG}
+status_check
 
-# Setup SystemD Catalogue Service
-echo -e "\e[35m Setup Catalogue Service\e[0m"
-cp ${repo_file}/files/catalogue.service /etc/systemd/system/catalogue.service
+print_head "Install Dependencies"
+cd /app &>>${LOG}
+npm install &>>${LOG}
+status_check
 
-# Load the service
-echo -e "\e[35m Load Service\e[0m"
-systemctl daemon-reload
+print_head "Setup Catalogue Service"
+cp ${repo_file}/files/catalogue.service /etc/systemd/system/catalogue.service &>>${LOG}
+status_check
 
-# Start the service
-echo -e "\e[35m Enable and Start Service\e[0m"
-systemctl enable catalogue
-systemctl start catalogue
+print_head "Load Service"
+systemctl daemon-reload &>>${LOG}
+status_check
+
+print_head "Enable Service"
+systemctl enable catalogue &>>${LOG}
+status_check
+
+print_head "Start Service"
+systemctl start catalogue &>>${LOG}
+status_check
 
 # We need to load the schema. To load schema we need to install mongodb client
 # To have it installed we can setup MongoDB repo and install mongodb-client
-cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo
+cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+status_check
 
-# Install MongoDB client
-echo -e "\e[35m Install MongoDB Client\e[0m"
-yum install mongodb-org-shell -y
+print_head "Install MongoDB Client"
+yum install mongodb-org-shell -y &>>${LOG}
+status_check
 
-# Load Schema
-echo -e "\e[35m Load Schema\e[0m"
-mongo --host mongodb-dev.raviteja.online </app/schema/catalogue.js
+print_head "Load Schema"
+mongo --host mongodb-dev.raviteja.online </app/schema/catalogue.js &>>${LOG}
+status_check

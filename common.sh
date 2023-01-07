@@ -1,4 +1,4 @@
-conf_file=$(pwd)
+script_location=$(pwd)
 LOG=/tmp/roboshop.log
 
 status_check() {
@@ -9,4 +9,8 @@ status_check() {
     echo "Refer Log File For More Information, LOG - ${LOG}"
   exit
   fi
+}
+
+print_head() {
+  echo -e "\e[1m \e[0m"
 }
