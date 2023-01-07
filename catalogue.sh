@@ -19,7 +19,7 @@ print_head "Create Directory"
 mkdir -p /app &>>${LOG}
 status_check
 
-print_head "Removing Existing Files"
+print_head "Remove Existing Files"
 rm -rf /app/* &>>${LOG}
 status_check
 
@@ -37,7 +37,7 @@ npm install &>>${LOG}
 status_check
 
 print_head "Setup Catalogue Service"
-cp ${repo_file}/files/catalogue.service /etc/systemd/system/catalogue.service &>>${LOG}
+cp ${script_location}/files/catalogue.service /etc/systemd/system/catalogue.service &>>${LOG}
 status_check
 
 print_head "Load Service"
