@@ -71,15 +71,18 @@ nodejs() {
   # We need to load the schema. To load schema we need to install mongodb client
   # To have it installed we can setup MongoDB repo and install mongodb-client
 
-  print_head "Setup MongoDB Repo"
-  cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
-  status_check
+  if [ ${schema_load} == "true" ]; then
 
-  print_head "Install MongoDB Client"
-  yum install mongodb-org-shell -y &>>${LOG}
-  status_check
+    print_head "Setup MongoDB Repo"
+    cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+    status_check
 
-  print_head "Load Schema"
-  mongo --host mongodb-dev.raviteja.online </app/schema/${component}.js &>>${LOG}
-  status_check
+    print_head "Install MongoDB Client"
+    yum install mongodb-org-shell -y &>>${LOG}
+    status_check
+
+    print_head "Load Schema"
+    mongo --host mongodb-dev.raviteja.online </app/schema/${component}.js &>>${LOG}
+    status_check
+  fi
 }
