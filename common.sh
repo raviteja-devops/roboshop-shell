@@ -15,15 +15,7 @@ print_head() {
   echo -e "\e[1m \e[0m"
 }
 
-nodejs() {
-  print_head "Setup NodeJS repos"
-  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
-  status_check
-
-  print_head "Install NodeJS"
-  yum install nodejs -y &>>${LOG}
-  status_check
-
+app_prereq() {
   print_head "Add User"
   id roboshop &>>${LOG}
   if [ $? -ne 0]; then
@@ -35,23 +27,21 @@ nodejs() {
   mkdir -p /app &>>${LOG}
   status_check
 
+  print_head "Download The Application Code"
+  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
+  status_check
+
   print_head "Remove Existing Files"
   rm -rf /app/* &>>${LOG}
   status_check
-
-  print_head "Download The Application Code"
-  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
 
   print_head "Unzip the Downloaded Content"
   cd /app &>>${LOG}
   unzip /tmp/${component}.zip &>>${LOG}
   status_check
+}
 
-  print_head "Install Dependencies"
-  cd /app &>>${LOG}
-  npm install &>>${LOG}
-  status_check
-
+systemd_setup() {
   print_head "Setup ${component} Service"
   cp ${script_location}/files/${component}.service /etc/systemd/system/${component}.service &>>${LOG}
   status_check
@@ -67,22 +57,76 @@ nodejs() {
   print_head "Start Service"
   systemctl start ${component} &>>${LOG}
   status_check
+}
 
-  # We need to load the schema. To load schema we need to install mongodb client
-  # To have it installed we can setup MongoDB repo and install mongodb-client
-
+load_schema() {
   if [ ${schema_load} == "true" ]; then
+    if [ ${schema_type} == "mongo" ]; then
 
-    print_head "Setup MongoDB Repo"
-    cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
-    status_check
+      print_head "Setup MongoDB Repo"
+      cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+      status_check
 
-    print_head "Install MongoDB Client"
-    yum install mongodb-org-shell -y &>>${LOG}
-    status_check
+      print_head "Install MongoDB Client"
+      yum install mongodb-org-shell -y &>>${LOG}
+      status_check
 
-    print_head "Load Schema"
-    mongo --host mongodb-dev.raviteja.online </app/schema/${component}.js &>>${LOG}
-    status_check
+      print_head "Load Schema"
+      mongo --host mongodb-dev.raviteja.online </app/schema/${component}.js &>>${LOG}
+      status_check
+    fi
+
+    if [ ${schema_type} == "mysql" ]; then
+
+      print_head "Install MYSQL Client"
+      yum install mysql-client -y &>>${LOG}
+      status_check
+
+      print_head "Load Schema"
+      mysql -h mysql-dev.raviteja.online -uroot -p${root_mysql_password} < /app/schema/${component}.sql
+      status_check
+    fi
   fi
+
+}
+
+nodejs() {
+  print_head "Setup NodeJS repos"
+  curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>${LOG}
+  status_check
+
+  print_head "Install NodeJS"
+  yum install nodejs -y &>>${LOG}
+  status_check
+
+  app_prereq
+
+  print_head "Install Dependencies"
+  cd /app &>>${LOG}
+  npm install &>>${LOG}
+  status_check
+
+  systemd_setup
+
+  load_schema
+}
+
+maven() {
+  print_head "Install Maven"
+  yum install maven -y &>>${LOG}
+  status_check
+
+  app_prereq
+
+  print_head "Build The Application"
+  mvn clean package &>>${LOG}
+  status_check
+
+  print_head "Copy App File"
+  mv target/${component}-1.0.jar ${component}.jar &>>${LOG}
+  status_check
+
+  systemd_setup
+
+  load_schema
 }

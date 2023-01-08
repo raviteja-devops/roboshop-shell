@@ -1,5 +1,10 @@
 source common.sh
 
+if [ -z "${root_mysql_password}" ]; then
+  echo "variable root_mysql_password needed"
+  exit
+fi
+
 print_head "Disable MySQL 8 version"
 dnf module disable mysql -y &>>${LOG}
 status_check
@@ -21,9 +26,5 @@ systemctl start mysqld &>>${LOG}
 status_check
 
 print_head "Change The Default Root Password"
-mysql_secure_installation --set-root-pass RoboShop@1 &>>${LOG}
-status_check
-
-print_head "Check The New Password Working or Not"
-mysql -uroot -pRoboShop@1 &>>${LOG}
+mysql_secure_installation --set-root-pass ${root_mysql_password} &>>${LOG}
 status_check
