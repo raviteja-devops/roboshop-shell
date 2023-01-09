@@ -22,7 +22,7 @@ systemctl enable mysqld &>>${LOG}
 status_check
 
 print_head "Start MySQL Server"
-systemctl start mysqld &>>${LOG}
+systemctl restart mysqld &>>${LOG}
 status_check
 
 print_head "Change The Default Root Password"
