@@ -147,3 +147,25 @@ python() {
 
   load_schema
 }
+
+golang() {
+  print_head "Install GoLang"
+  yum install golang -y &>>${LOG}
+  status_check
+
+  app_prereq
+
+  print_head "Download The Dependencies"
+  cd /app &>>${LOG}
+  go mod init dispatch &>>${LOG}
+  go get &>>${LOG}
+  status_check
+
+  print_head "Build The SoftWare"
+  go build &>>${LOG}
+  status_check
+
+  systemd_setup
+
+  load_schema
+}
