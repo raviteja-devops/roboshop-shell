@@ -27,12 +27,12 @@ app_prereq() {
   mkdir -p /app &>>${LOG}
   status_check
 
-  print_head "Download The Application Code"
-  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
-  status_check
-
   print_head "Remove Existing Files"
   rm -rf /app/* &>>${LOG}
+  status_check
+
+  print_head "Download The Application Code"
+  curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
   status_check
 
   print_head "Unzip the Downloaded Content"
