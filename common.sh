@@ -27,12 +27,12 @@ app_prereq() {
   mkdir -p /app &>>${LOG}
   status_check
 
-  print_head "Remove Existing Files"
-  rm -rf /app/* &>>${LOG}
-  status_check
-
   print_head "Download The Application Code"
   curl -L -o /tmp/${component}.zip https://roboshop-artifacts.s3.amazonaws.com/${component}.zip &>>${LOG}
+  status_check
+
+  print_head "Remove Existing Files"
+  rm -rf /app/* &>>${LOG}
   status_check
 
   print_head "Unzip the Downloaded Content"
@@ -64,7 +64,7 @@ load_schema() {
     if [ ${schema_type} == "mongo" ]; then
 
       print_head "Setup MongoDB Repo"
-      cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+      cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongodb.repo &>>${LOG}
       status_check
 
       print_head "Install MongoDB Client"
