@@ -64,7 +64,7 @@ load_schema() {
     if [ ${schema_type} == "mongo" ]; then
 
       print_head "Setup MongoDB Repo"
-      cp ${repo_file}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
+      cp ${script_location}/files/mongodb.repo /etc/yum.repos.d/mongo.repo &>>${LOG}
       status_check
 
       print_head "Install MongoDB Client"
